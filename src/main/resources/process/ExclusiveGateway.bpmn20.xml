@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://noctiflorous.cn/flowable">
+    <process id="HolidayDemo4" name="HolidayDemo4" isExecutable="true">
+        <documentation>排他网关：少于3天由组长审批，3天及以上由总监审批，再由人事审批。</documentation>
+        <startEvent id="startEvent"/>
+        <userTask id="userApplication" name="用户申请" flowable:assignee="zhangsan"/>
+        <!-- 完成用户申请前，需要设置数值类型的流程变量 num（请假天数）。 -->
+        <exclusiveGateway id="daysGateway"/>
+        <userTask id="leaderApproval" name="组长审批" flowable:assignee="lisi"/>
+        <userTask id="directorApproval" name="总监审批" flowable:assignee="wangwu"/>
+        <userTask id="hrApproval" name="人事审批" flowable:assignee="kerwim"/>
+        <endEvent id="endEvent"/>
+
+        <sequenceFlow id="flowStartToApplication" sourceRef="startEvent" targetRef="userApplication"/>
+        <sequenceFlow id="flowApplicationToGateway" sourceRef="userApplication" targetRef="daysGateway"/>
+        <sequenceFlow id="flowGatewayToLeader" name="小于3天" sourceRef="daysGateway" targetRef="leaderApproval">
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${num < 3}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flowGatewayToDirector" name="大于等于3天" sourceRef="daysGateway" targetRef="directorApproval">
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${num >= 3}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flowLeaderToHr" sourceRef="leaderApproval" targetRef="hrApproval"/>
+        <sequenceFlow id="flowDirectorToHr" sourceRef="directorApproval" targetRef="hrApproval"/>
+        <sequenceFlow id="flowHrToEnd" sourceRef="hrApproval" targetRef="endEvent"/>
+    </process>
+
+    <bpmndi:BPMNDiagram id="HolidayDemo4Diagram">
+        <bpmndi:BPMNPlane id="HolidayDemo4Plane" bpmnElement="HolidayDemo4">
+            <bpmndi:BPMNShape id="startEventShape" bpmnElement="startEvent">
+                <dc:Bounds x="40" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="userApplicationShape" bpmnElement="userApplication">
+                <dc:Bounds x="130" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="daysGatewayShape" bpmnElement="daysGateway" isMarkerVisible="true">
+                <dc:Bounds x="330" y="195" width="50" height="50"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="leaderApprovalShape" bpmnElement="leaderApproval">
+                <dc:Bounds x="450" y="40" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="directorApprovalShape" bpmnElement="directorApproval">
+                <dc:Bounds x="450" y="350" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="hrApprovalShape" bpmnElement="hrApproval">
+                <dc:Bounds x="780" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endEventShape" bpmnElement="endEvent">
+                <dc:Bounds x="970" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flowStartToApplicationEdge" bpmnElement="flowStartToApplication">
+                <di:waypoint x="76" y="220"/>
+                <di:waypoint x="130" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowApplicationToGatewayEdge" bpmnElement="flowApplicationToGateway">
+                <di:waypoint x="250" y="220"/>
+                <di:waypoint x="330" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowGatewayToLeaderEdge" bpmnElement="flowGatewayToLeader">
+                <di:waypoint x="355" y="195"/>
+                <di:waypoint x="355" y="90"/>
+                <di:waypoint x="450" y="90"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="365" y="130" width="70" height="20"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowGatewayToDirectorEdge" bpmnElement="flowGatewayToDirector">
+                <di:waypoint x="355" y="245"/>
+                <di:waypoint x="355" y="400"/>
+                <di:waypoint x="450" y="400"/>
+                <bpmndi:BPMNLabel>
+                    <dc:Bounds x="365" y="305" width="90" height="20"/>
+                </bpmndi:BPMNLabel>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowLeaderToHrEdge" bpmnElement="flowLeaderToHr">
+                <di:waypoint x="570" y="90"/>
+                <di:waypoint x="840" y="90"/>
+                <di:waypoint x="840" y="170"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowDirectorToHrEdge" bpmnElement="flowDirectorToHr">
+                <di:waypoint x="570" y="400"/>
+                <di:waypoint x="840" y="400"/>
+                <di:waypoint x="840" y="270"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowHrToEndEdge" bpmnElement="flowHrToEnd">
+                <di:waypoint x="900" y="220"/>
+                <di:waypoint x="970" y="220"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

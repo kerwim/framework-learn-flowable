@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://noctiflorous.cn/flowable">
+    <process id="HolidayDemo3" name="HolidayDemo3" isExecutable="true">
+        <documentation>人事审批与经理审批的候选组分配案例</documentation>
+        <startEvent id="startEvent"/>
+        <userTask id="hrApproval" name="人事审批" flowable:candidateGroups="xsb"/>
+        <userTask id="managerApproval" name="经理审批" flowable:candidateGroups="xsb"/>
+        <endEvent id="endEvent"/>
+
+        <sequenceFlow id="flowStartToHr" sourceRef="startEvent" targetRef="hrApproval"/>
+        <sequenceFlow id="flowHrToManager" sourceRef="hrApproval" targetRef="managerApproval"/>
+        <sequenceFlow id="flowManagerToEnd" sourceRef="managerApproval" targetRef="endEvent"/>
+    </process>
+
+    <bpmndi:BPMNDiagram id="HolidayDemo3Diagram">
+        <bpmndi:BPMNPlane id="HolidayDemo3Plane" bpmnElement="HolidayDemo3">
+            <bpmndi:BPMNShape id="startEventShape" bpmnElement="startEvent">
+                <dc:Bounds x="80" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="hrApprovalShape" bpmnElement="hrApproval">
+                <dc:Bounds x="260" y="68" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="managerApprovalShape" bpmnElement="managerApproval">
+                <dc:Bounds x="560" y="68" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endEventShape" bpmnElement="endEvent">
+                <dc:Bounds x="860" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flowStartToHrEdge" bpmnElement="flowStartToHr">
+                <di:waypoint x="116" y="118"/>
+                <di:waypoint x="260" y="118"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowHrToManagerEdge" bpmnElement="flowHrToManager">
+                <di:waypoint x="380" y="118"/>
+                <di:waypoint x="560" y="118"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowManagerToEndEdge" bpmnElement="flowManagerToEnd">
+                <di:waypoint x="680" y="118"/>
+                <di:waypoint x="860" y="118"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

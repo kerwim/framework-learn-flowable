@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://noctiflorous.cn/flowable">
+    <process id="HolidayDemo5" name="HolidayDemo5" isExecutable="true">
+        <documentation>并行网关：人事与部门审批全部完成后，进入总经理审批。</documentation>
+        <startEvent id="startEvent"/>
+        <userTask id="userApplication" name="用户申请"/>
+        <parallelGateway id="parallelSplit"/>
+        <userTask id="hrApproval" name="人事审批" flowable:assignee="zhangsan"/>
+        <userTask id="departmentApproval" name="部门审批" flowable:assignee="lisi"/>
+        <parallelGateway id="parallelJoin"/>
+        <userTask id="generalManagerApproval" name="总经理审批"/>
+        <endEvent id="endEvent"/>
+
+        <sequenceFlow id="flowStartToApplication" sourceRef="startEvent" targetRef="userApplication"/>
+        <sequenceFlow id="flowApplicationToSplit" sourceRef="userApplication" targetRef="parallelSplit"/>
+        <sequenceFlow id="flowSplitToHr" sourceRef="parallelSplit" targetRef="hrApproval"/>
+        <sequenceFlow id="flowSplitToDepartment" sourceRef="parallelSplit" targetRef="departmentApproval"/>
+        <sequenceFlow id="flowHrToJoin" sourceRef="hrApproval" targetRef="parallelJoin"/>
+        <sequenceFlow id="flowDepartmentToJoin" sourceRef="departmentApproval" targetRef="parallelJoin"/>
+        <sequenceFlow id="flowJoinToManager" sourceRef="parallelJoin" targetRef="generalManagerApproval"/>
+        <sequenceFlow id="flowManagerToEnd" sourceRef="generalManagerApproval" targetRef="endEvent"/>
+    </process>
+
+    <bpmndi:BPMNDiagram id="HolidayDemo5Diagram">
+        <bpmndi:BPMNPlane id="HolidayDemo5Plane" bpmnElement="HolidayDemo5">
+            <bpmndi:BPMNShape id="startEventShape" bpmnElement="startEvent">
+                <dc:Bounds x="40" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="userApplicationShape" bpmnElement="userApplication">
+                <dc:Bounds x="130" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="parallelSplitShape" bpmnElement="parallelSplit">
+                <dc:Bounds x="330" y="195" width="50" height="50"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="hrApprovalShape" bpmnElement="hrApproval">
+                <dc:Bounds x="500" y="40" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="departmentApprovalShape" bpmnElement="departmentApproval">
+                <dc:Bounds x="500" y="350" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="parallelJoinShape" bpmnElement="parallelJoin">
+                <dc:Bounds x="750" y="195" width="50" height="50"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="generalManagerApprovalShape" bpmnElement="generalManagerApproval">
+                <dc:Bounds x="860" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endEventShape" bpmnElement="endEvent">
+                <dc:Bounds x="1040" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flowStartToApplicationEdge" bpmnElement="flowStartToApplication">
+                <di:waypoint x="76" y="220"/>
+                <di:waypoint x="130" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowApplicationToSplitEdge" bpmnElement="flowApplicationToSplit">
+                <di:waypoint x="250" y="220"/>
+                <di:waypoint x="330" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowSplitToHrEdge" bpmnElement="flowSplitToHr">
+                <di:waypoint x="355" y="195"/>
+                <di:waypoint x="355" y="90"/>
+                <di:waypoint x="500" y="90"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowSplitToDepartmentEdge" bpmnElement="flowSplitToDepartment">
+                <di:waypoint x="355" y="245"/>
+                <di:waypoint x="355" y="400"/>
+                <di:waypoint x="500" y="400"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowHrToJoinEdge" bpmnElement="flowHrToJoin">
+                <di:waypoint x="620" y="90"/>
+                <di:waypoint x="775" y="90"/>
+                <di:waypoint x="775" y="195"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowDepartmentToJoinEdge" bpmnElement="flowDepartmentToJoin">
+                <di:waypoint x="620" y="400"/>
+                <di:waypoint x="775" y="400"/>
+                <di:waypoint x="775" y="245"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowJoinToManagerEdge" bpmnElement="flowJoinToManager">
+                <di:waypoint x="800" y="220"/>
+                <di:waypoint x="860" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowManagerToEndEdge" bpmnElement="flowManagerToEnd">
+                <di:waypoint x="980" y="220"/>
+                <di:waypoint x="1040" y="220"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://noctiflorous.cn/flowable">
+    <process id="InclusiveGateway" name="包容网关审批案例" isExecutable="true">
+        <documentation>包容网关：按 num 选择一个或多个审批分支，全部选中分支完成后进入总经理审批。</documentation>
+        <startEvent id="startEvent"/>
+        <userTask id="userApplication" name="用户申请"/>
+        <!-- 完成用户申请前需设置数值变量 num；num >= 9 时没有匹配分支。 -->
+        <inclusiveGateway id="inclusiveSplit"/>
+        <userTask id="approval1" name="审批1"/>
+        <userTask id="approval3" name="审批3"/>
+        <userTask id="approval2" name="审批2"/>
+        <inclusiveGateway id="inclusiveJoin"/>
+        <userTask id="generalManagerApproval" name="总经理审批"/>
+        <endEvent id="endEvent"/>
+
+        <sequenceFlow id="flowStartToApplication" sourceRef="startEvent" targetRef="userApplication"/>
+        <sequenceFlow id="flowApplicationToSplit" sourceRef="userApplication" targetRef="inclusiveSplit"/>
+        <sequenceFlow id="flowSplitToHr" name="num &lt; 3" sourceRef="inclusiveSplit" targetRef="approval1">
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${num < 3}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flowSplitToDepartment" name="num &lt; 9" sourceRef="inclusiveSplit" targetRef="approval3">
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${num < 9}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flowSplitToApproval2" name="num &lt; 6" sourceRef="inclusiveSplit" targetRef="approval2">
+            <conditionExpression xsi:type="tFormalExpression"><![CDATA[${num < 6}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="flowApproval2ToJoin" sourceRef="approval2" targetRef="inclusiveJoin"/>
+        <sequenceFlow id="flowHrToJoin" sourceRef="approval1" targetRef="inclusiveJoin"/>
+        <sequenceFlow id="flowDepartmentToJoin" sourceRef="approval3" targetRef="inclusiveJoin"/>
+        <sequenceFlow id="flowJoinToManager" sourceRef="inclusiveJoin" targetRef="generalManagerApproval"/>
+        <sequenceFlow id="flowManagerToEnd" sourceRef="generalManagerApproval" targetRef="endEvent"/>
+    </process>
+
+    <bpmndi:BPMNDiagram id="InclusiveGatewayDiagram">
+        <bpmndi:BPMNPlane id="InclusiveGatewayPlane" bpmnElement="InclusiveGateway">
+            <bpmndi:BPMNShape id="startEventShape" bpmnElement="startEvent">
+                <dc:Bounds x="40" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="userApplicationShape" bpmnElement="userApplication">
+                <dc:Bounds x="130" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="inclusiveSplitShape" bpmnElement="inclusiveSplit">
+                <dc:Bounds x="330" y="195" width="50" height="50"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="approval1Shape" bpmnElement="approval1">
+                <dc:Bounds x="500" y="40" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="approval3Shape" bpmnElement="approval3">
+                <dc:Bounds x="500" y="350" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="approval2Shape" bpmnElement="approval2">
+                <dc:Bounds x="500" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="inclusiveJoinShape" bpmnElement="inclusiveJoin">
+                <dc:Bounds x="750" y="195" width="50" height="50"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="generalManagerApprovalShape" bpmnElement="generalManagerApproval">
+                <dc:Bounds x="860" y="170" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endEventShape" bpmnElement="endEvent">
+                <dc:Bounds x="1040" y="202" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flowStartToApplicationEdge" bpmnElement="flowStartToApplication">
+                <di:waypoint x="76" y="220"/>
+                <di:waypoint x="130" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowApplicationToSplitEdge" bpmnElement="flowApplicationToSplit">
+                <di:waypoint x="250" y="220"/>
+                <di:waypoint x="330" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowSplitToHrEdge" bpmnElement="flowSplitToHr">
+                <di:waypoint x="355" y="195"/>
+                <di:waypoint x="355" y="90"/>
+                <di:waypoint x="500" y="90"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowSplitToDepartmentEdge" bpmnElement="flowSplitToDepartment">
+                <di:waypoint x="355" y="245"/>
+                <di:waypoint x="355" y="400"/>
+                <di:waypoint x="500" y="400"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowHrToJoinEdge" bpmnElement="flowHrToJoin">
+                <di:waypoint x="620" y="90"/>
+                <di:waypoint x="775" y="90"/>
+                <di:waypoint x="775" y="195"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowDepartmentToJoinEdge" bpmnElement="flowDepartmentToJoin">
+                <di:waypoint x="620" y="400"/>
+                <di:waypoint x="775" y="400"/>
+                <di:waypoint x="775" y="245"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowSplitToApproval2Edge" bpmnElement="flowSplitToApproval2">
+                <di:waypoint x="380" y="220"/>
+                <di:waypoint x="500" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowApproval2ToJoinEdge" bpmnElement="flowApproval2ToJoin">
+                <di:waypoint x="620" y="220"/>
+                <di:waypoint x="750" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowJoinToManagerEdge" bpmnElement="flowJoinToManager">
+                <di:waypoint x="800" y="220"/>
+                <di:waypoint x="860" y="220"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowManagerToEndEdge" bpmnElement="flowManagerToEnd">
+                <di:waypoint x="980" y="220"/>
+                <di:waypoint x="1040" y="220"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

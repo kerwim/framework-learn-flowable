@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             targetNamespace="http://noctiflorous.cn/flowable">
+    <process id="Example02" name="Example02" isExecutable="true">
+        <documentation>流程变量表达式与任务监听器示例</documentation>
+        <startEvent id="startEvent1"/>
+        <!-- 启动流程时需要传入流程变量 assignee2。 -->
+        <userTask id="approvalUser1" name="审批用户1" flowable:assignee="${assignee2}"/>
+        <userTask id="approvalUser2" name="审批用户2">
+            <extensionElements>
+                <flowable:taskListener event="create" class="cn.noctiflorous.listener.MyListener01"/>
+            </extensionElements>
+        </userTask>
+        <endEvent id="endEvent1"/>
+
+        <sequenceFlow id="flowStartToUser1" sourceRef="startEvent1" targetRef="approvalUser1"/>
+        <sequenceFlow id="flowUser1ToUser2" sourceRef="approvalUser1" targetRef="approvalUser2"/>
+        <sequenceFlow id="flowUser2ToEnd" sourceRef="approvalUser2" targetRef="endEvent1"/>
+    </process>
+
+    <bpmndi:BPMNDiagram id="Example02Diagram">
+        <bpmndi:BPMNPlane id="Example02Plane" bpmnElement="Example02">
+            <bpmndi:BPMNShape id="startEvent1Shape" bpmnElement="startEvent1">
+                <dc:Bounds x="80" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="approvalUser1Shape" bpmnElement="approvalUser1">
+                <dc:Bounds x="180" y="68" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="approvalUser2Shape" bpmnElement="approvalUser2">
+                <dc:Bounds x="380" y="68" width="120" height="100"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="endEvent1Shape" bpmnElement="endEvent1">
+                <dc:Bounds x="580" y="100" width="36" height="36"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge id="flowStartToUser1Edge" bpmnElement="flowStartToUser1">
+                <di:waypoint x="116" y="118"/>
+                <di:waypoint x="180" y="118"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowUser1ToUser2Edge" bpmnElement="flowUser1ToUser2">
+                <di:waypoint x="300" y="118"/>
+                <di:waypoint x="380" y="118"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge id="flowUser2ToEndEdge" bpmnElement="flowUser2ToEnd">
+                <di:waypoint x="500" y="118"/>
+                <di:waypoint x="580" y="118"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
